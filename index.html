@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inecuaciones paso a paso · Tema 6</title>
+<style>
+:root{--ink:#402a24;--muted:#694b45;--rose:#eed3d5;--paper:#fffaf7;--accent:#733e48;--line:#caa6a8}*{box-sizing:border-box}body{margin:0;background:#f7eae7;color:var(--ink);font:1rem/1.55 system-ui,sans-serif}header,main,footer,.voice-bar{max-width:67rem;margin:auto;padding:1rem clamp(1rem,4vw,2.5rem)}h1,h2,h3{font-family:Georgia,serif;line-height:1.2}h1{font-size:clamp(2.6rem,7vw,4.8rem);margin:.2em 0}h2{font-size:clamp(1.8rem,5vw,2.8rem);margin:.25em 0}.eyebrow{font-size:.8rem;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}.layout{display:grid;grid-template-columns:minmax(12rem,1fr) minmax(0,3fr);gap:1rem;align-items:start}.panel{background:var(--paper);border:1px solid var(--line);border-radius:1rem;padding:clamp(.8rem,3vw,1.5rem)}nav{display:grid;gap:.4rem}nav button{text-align:left}button,select{font:inherit;color:inherit;background:var(--paper);border:1px solid #926d6b;border-radius:.55rem;padding:.45rem .65rem;min-height:44px;max-width:100%}button{cursor:pointer}button:hover:not(:disabled),button[aria-current]{background:var(--rose)}button:disabled{opacity:.55}.primary{background:var(--accent);color:white}.primary:hover:not(:disabled){background:#582e38}:focus-visible{outline:3px solid #923254;outline-offset:3px}.formula{background:#f5e1e1;border-left:4px solid var(--accent);padding:.65rem .8rem;border-radius:.3rem;font:700 clamp(1rem,3.6vw,1.35rem)/1.5 Menlo,Consolas,monospace;overflow-wrap:anywhere;margin:.45rem 0}.step{margin:1rem 0;padding-top:.6rem;border-top:1px solid var(--line)}.example-start{margin-top:1.8rem;border-top:2px solid var(--accent)}.example-label{background:var(--rose);border-radius:.45rem;padding:.5rem .75rem;font-weight:750}.controls{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}.operation{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:.35rem;align-items:center}.operation>.speaker{grid-column:3;grid-row:1;min-width:44px}.operation>.playback{grid-column:2;grid-row:1;white-space:nowrap}.playback{display:inline-flex;gap:.2rem}.playback button{min-width:40px;padding:.2rem}.row-explanation{border-bottom:1px solid var(--line);padding-bottom:.4rem}.row-reason,.why{color:var(--muted)}.why li+li{margin-top:.3rem}.line,#intervalDrawing{width:100%;max-width:440px;display:block;margin:.7rem 0}table{width:100%;border-collapse:collapse;font-size:clamp(.75rem,2.4vw,.95rem);margin:.75rem 0}td,th{border:1px solid var(--line);padding:.3rem;text-align:center}th{background:#f3dfe0}caption{text-align:left;font-weight:750;margin-bottom:.3rem}summary{cursor:pointer;font-weight:750}.voice-bar{border-bottom:1px solid var(--line)}.voice-bar label,.interval-explorer label{display:block;font-weight:650}.voice-bar .controls{margin-top:.5rem}.interval-explorer{padding:.8rem;border:1px solid var(--line);border-radius:.8rem;background:#fcf1ec;margin:1rem 0}.interval-slider{flex:1 1 9rem}.interval-slider input{width:100%;accent-color:var(--accent)}.skip,.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.skip:focus{position:static;width:auto;height:auto;clip-path:none}footer{color:var(--muted)}[hidden]{display:none!important}@media(max-width:690px){.layout{grid-template-columns:1fr}nav{grid-template-columns:repeat(2,minmax(0,1fr))}}@media print{nav,.controls,.voice-bar,.speaker,.playback{display:none!important}.layout{display:block}}
+.menu-heading{font-size:1.25rem;margin:.35rem 0}.menu-links{display:grid;gap:.4rem}.menu-links+.menu-heading{margin-top:1rem}@media(max-width:690px){#menu{grid-template-columns:1fr}.menu-links{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<a class="skip" href="#lesson">Saltar a la explicación</a>
+<div class="voice-bar"><details id="voiceSettings"><summary>🔊 Elegir voz y velocidad</summary><div class="controls"><div><label for="voices">Voz en español</label><select id="voices"></select></div><div><label for="rate">Velocidad</label><select id="rate"><option value="1">Normal</option><option value="1.2">Más rápido</option><option value=".8">Más lento</option></select></div></div></details><p id="voiceState" class="sr" role="status"></p></div>
+<header><div class="eyebrow">Tema 6 · Álgebra · Guía interactiva</div><h1>Inecuaciones<br>paso a paso</h1><p>En las explicaciones puedes ver todos los pasos. En la práctica, intenta resolver cada ejercicio antes de ver la solución. Pulsa el altavoz para escuchar la explicación.</p></header>
+<main><div class="layout"><nav class="panel" aria-label="Explicaciones y práctica" id="menu"><h2 class="menu-heading">Explicaciones</h2><div class="menu-links" id="explanationLinks"></div><h2 class="menu-heading">Práctica</h2><div class="menu-links" id="practiceLinks"></div></nav>
+<section class="panel" id="lesson" aria-labelledby="title"><div class="eyebrow" id="source"></div><h2 id="title" tabindex="-1"></h2>
+<div class="operation"><div><p id="prompt" class="formula" hidden></p><p id="intro"></p></div><button id="introSpeaker" class="speaker" type="button" aria-label="Escuchar el planteamiento">🔊</button></div>
+<section id="intervalExplorer" class="interval-explorer" hidden aria-labelledby="intervalHeading"><h3 id="intervalHeading">Mueve el límite en la recta</h3><p>Cambia el signo o mueve el deslizador para comparar los intervalos.</p><div class="controls"><div><label for="intervalSign">Signo de la desigualdad</label><select id="intervalSign"><option value="&lt;">&lt; Menor que</option><option value="≤">≤ Menor o igual</option><option value=">">&gt; Mayor que</option><option value="≥" selected>≥ Mayor o igual</option></select></div><div class="interval-slider"><label for="intervalLimit">Valor del límite: <output id="intervalLimitValue" for="intervalLimit">2</output></label><input type="range" id="intervalLimit" min="-5" max="5" step=".5" value="2"></div></div><p id="intervalResult" class="formula" role="status"></p><svg id="intervalDrawing" viewBox="0 0 440 78" role="img"></svg><p id="intervalExplanation"></p></section>
+<div id="steps"></div><p id="progress" role="status"></p><div class="controls"><button id="prev">Anterior</button><button id="hide">Ocultar último paso</button><button id="next" class="primary">Revelar paso</button></div>
+</section></div><div id="playback" class="playback" hidden><button id="pause" type="button" aria-label="Pausar">⏸</button><button id="stop" type="button" aria-label="Cerrar audio">×</button></div></main>
+<footer id="credits"></footer><noscript>Activa JavaScript para usar la presentación interactiva.</noscript>
+<script>
+'use strict';
+const line = (label, end, closed, right) => `<svg class="line" viewBox="0 0 400 66" role="img" aria-label="${label}"><path d="M12 24H388 M12 24l9-5 M12 24l9 5 M388 24l-9-5 M388 24l-9 5" fill="none" stroke="#694b45" stroke-width="2"/><path d="${right?'M200 24H381l-10-6 M381 24l-10 6':'M200 24H19l10-6 M19 24l10 6'}" stroke="#733e48" stroke-width="5" fill="none"/><circle cx="200" cy="24" r="7" fill="${closed?'#733e48':'#fffaf7'}" stroke="#733e48" stroke-width="3"/><text x="200" y="54" text-anchor="middle" fill="#402a24">${end}</text></svg>`;
+const twoEnds = (label, a, b, path, fillA=true, fillB=true) => `<svg class="line" viewBox="0 0 400 66" role="img" aria-label="${label}"><path d="M12 24H388 M12 24l9-5 M12 24l9 5 M388 24l-9-5 M388 24l-9 5" fill="none" stroke="#694b45" stroke-width="2"/><path d="${path}" fill="none" stroke="#733e48" stroke-width="5"/><circle cx="140" cy="24" r="7" fill="${fillA?'#733e48':'#fffaf7'}" stroke="#733e48" stroke-width="3"/><circle cx="260" cy="24" r="7" fill="${fillB?'#733e48':'#fffaf7'}" stroke="#733e48" stroke-width="3"/><text x="140" y="54" text-anchor="middle">${a}</text><text x="260" y="54" text-anchor="middle">${b}</text></svg>`;
+const step = (title, math, reason, speech, extra='') => ({title,math,reason,speech,extra});
+const lessons = [
+['Primer grado','Págs. 72–73 · Ej. 4a, 4b y 4c, pág. 78','Una inecuación pide encontrar todos los valores de x que hacen verdadera una desigualdad. Empezamos con tres formas simplificadas de los ejercicios 4a, 4b y 4c. Después resolvemos esos mismos ejercicios completos desde el enunciado.',[
+step('Dejar x sola','8x ≥ 23 → (8x) ÷ 8 ≥ 23 ÷ 8 → x ≥ 23/8','El 8 multiplica a x. Divide ambos lados entre 8. Como 8 es positivo, el símbolo conserva su sentido.','Empezamos con ocho por equis mayor o igual que veintitrés. Para dejar equis sola, dividimos ambos lados entre ocho. La solución incluye veintitrés octavos y todos los números mayores.'),
+step('Reunir las x antes de dividir','4x + 6 < 1 − 5x → 9x + 6 < 1 → 9x < −5 → (9x) ÷ 9 < (−5) ÷ 9 → x < −5/9','Suma 5x en ambos lados para reunir las x. Resta 6 y divide entre 9. El resultado del cociente es negativo, pero el divisor es positivo y el símbolo se conserva.','Sumamos cinco equis en ambos lados. Ahora restamos seis para dejar nueve equis sola. Dividimos por nueve. Que el resultado sea negativo no cambia el orden: lo que importa es el signo del divisor.'),
+step('Comprobar si el límite entra','9x ≤ −11 → (9x) ÷ 9 ≤ (−11) ÷ 9 → x ≤ −11/9','Divide entre 9. Si sustituyes x por −11/9, el lado izquierdo vale exactamente −11. El límite entra porque se admite la igualdad.','Divide ambos lados entre nueve. Si pruebas menos once novenos, al multiplicar por nueve obtienes menos once exactos. Por eso el límite está incluido.'),
+step('Agrupar términos','9 + 9x − 11 ≥ x + 21 → 9x − 2 ≥ x + 21','A la izquierda, 9 − 11 da −2. Los términos con x se mantienen.','Primero junta nueve y menos once. Queda menos dos. Ahora hay una equis a la derecha y nueve equis a la izquierda.'),
+step('Dejar las x en el mismo lado','9x − 2 ≥ x + 21 → 8x − 2 ≥ 21 → 8x ≥ 23','Resta x en los dos lados para quitar la x de la derecha. Luego suma 2 en ambos lados para quitar el −2.','Resta equis en los dos lados. A la izquierda quedan ocho equis. Suma dos en ambos lados y queda ocho equis mayor o igual que veintitrés.'),
+step('Dividir y representar','8x ≥ 23 → (8x) ÷ 8 ≥ 23 ÷ 8 → x ≥ 23/8 → [23/8, +∞)','Divide ambos lados entre 8. Como es positivo, el orden se conserva. El límite se incluye porque la igualdad está permitida.','Divide por ocho. Como ocho es positivo, el signo conserva su sentido. Veintitrés octavos entra en la solución.',line('Punto cerrado en veintitrés octavos y flecha hacia la derecha','23/8',true,true)),
+step('Simplificar y reunir términos','7x − 5 + 11 − 3x < 1 − 5x → 4x + 6 < 1 − 5x → 9x + 6 < 1 → 9x < −5 → (9x) ÷ 9 < (−5) ÷ 9 → x < −5/9','Agrupa primero a la izquierda. Suma 5x y resta 6 en ambos lados. Al dividir por 9, el signo se mantiene aunque el resultado sea negativo.','El lado izquierdo se reduce a cuatro equis más seis. Suma cinco equis para quitar el término de la derecha. Resta seis y divide por nueve. El signo se mantiene porque el divisor es positivo.'),
+step('Distribuir antes de despejar','7x + 1 ≤ 3x − 5(x + 2) → 7x + 1 ≤ −2x − 10 → 9x + 1 ≤ −10 → 9x ≤ −11 → (9x) ÷ 9 ≤ (−11) ÷ 9 → x ≤ −11/9','Multiplica −5 por los dos términos del paréntesis. Después suma 2x y resta 1 en ambos lados. Divide entre 9.','Menos cinco por equis da menos cinco equis. Menos cinco por dos da menos diez. Sumamos dos equis, restamos uno y dividimos por nueve.')
+]],
+['Dividir por un negativo','Pág. 73 · Regla de despeje · Ej. 4d y 4g, pág. 78','La desigualdad se invierte al dividir ambos lados por un número negativo. Vamos a ver cómo aplicarlo en dos ejercicios.',[
+step('Abrir paréntesis','2(2x − 3) + 5 > 7(x − 3) − 11 → 4x − 1 > 7x − 32','Distribuye el 2 y el 7 en sus respectivos paréntesis. Luego agrupa los números en cada lado.','Dos por menos tres da menos seis. Al sumar cinco queda menos uno. A la derecha, menos veintiuno y menos once dan menos treinta y dos.'),
+step('Reunir términos y dividir','4x − 1 > 7x − 32 → −3x − 1 > −32 → −3x > −31 → (−3x) ÷ (−3) < (−31) ÷ (−3) → x < 31/3','Resta 7x y suma 1 en ambos lados. Al dividir entre −3, > cambia a <. Multiplicar por −1 refleja los números respecto al cero e invierte su orden. Dividir por −3 incluye ese cambio de signo.','Una vez aislado menos tres por equis, dividimos entre menos tres. Dividir por un negativo invierte el orden, así que buscamos valores menores que treinta y un tercios.',line('Círculo abierto en treinta y un tercios y flecha hacia la izquierda','31/3',false,false)),
+step('Cancelar los cuadrados','x(x − 1) + 3 ≤ x² + 5 → x² − x + 3 ≤ x² + 5 → −x ≤ 2 → (−x) ÷ (−1) ≥ 2 ÷ (−1) → x ≥ −2','Distribuye x. Resta x² y 3 en ambos lados. Dividir por −1 convierte ≤ en ≥. El −2 se incluye.','Aunque aparecen cuadrados, se cancelan al restar equis al cuadrado a ambos lados. Queda menos equis menor o igual que dos. Al dividir entre menos uno, cambia el sentido y obtenemos equis mayor o igual que menos dos.',line('Punto cerrado en menos dos y flecha hacia la derecha','−2',true,true))
+]],
+['Recta e intervalos','Pág. 73 · Ej. 2a, 2b, 2c y 2h, pág. 78','El punto marca el extremo. Un punto relleno incluye el valor y un círculo vacío lo deja fuera.',[
+step('Incluir los dos extremos','[1, 7] → 1 ≤ x ≤ 7','Marca 1 y 7 con puntos rellenos y pinta el tramo entre ellos.','Uno y siete entran. La solución ocupa todo el tramo entre los dos.',twoEnds('Tramo de uno a siete, ambos incluidos',1,7,'M140 24H260')),
+step('Pintar hacia la derecha','[2, +∞) → x ≥ 2','Rellena el punto en 2 y pinta a la derecha. El infinito siempre lleva paréntesis.','Dos está incluido. También sirve cualquier número situado a su derecha.',line('Punto cerrado en dos y flecha hacia la derecha',2,true,true)),
+step('Incluir un solo extremo','(5, 9] → 5 < x ≤ 9','El paréntesis deja fuera el 5 y el corchete incluye el 9.','Dibuja un círculo vacío en cinco y un punto relleno en nueve. Pinta el tramo entre ellos.',twoEnds('Tramo entre cinco abierto y nueve cerrado',5,9,'M140 24H260',false,true)),
+step('Pintar hacia la izquierda','(−∞, 1) → x < 1','Deja abierto el punto en 1 y pinta a la izquierda.','Uno queda fuera. Sirve cualquier número situado a su izquierda.',line('Círculo abierto en uno y flecha hacia la izquierda',1,false,false))
+]],
+['Segundo grado','Págs. 74–75 · Ej. 8a, 8c y 8h, pág. 78','Primero busca dónde vale cero el polinomio. Después estudia el signo en cada tramo y comprueba si las raíces entran.',[
+step('Factorizar y encontrar raíces','x² − 5x + 6 ≥ 0 → (x − 2)(x − 3) ≥ 0','−2 y −3 suman −5 y su producto es 6. El producto vale cero en 2 y en 3.','Buscamos dos números que sumen menos cinco y se multipliquen para dar seis. Son menos dos y menos tres. Las raíces son dos y tres.'),
+step('Hacer la tabla de signos','x = 0 → +6 · x = 2,5 → −0,25 · x = 4 → +2','El signo solo puede cambiar al pasar por una raíz. Prueba un valor de cada tramo.','Antes de dos ambos factores son negativos. Entre dos y tres tienen signos opuestos. Después de tres son positivos.',`<table><caption>Signos del ejercicio 8a</caption><tr><th scope="col">Tramo</th><th scope="col">(−∞, 2)</th><th scope="col">(2, 3)</th><th scope="col">(3, +∞)</th></tr><tr><th scope="row">Producto</th><td>+</td><td>−</td><td>+</td></tr></table>`),
+step('Elegir los tramos','(−∞, 2] ∪ [3, +∞)','Como se pide ≥ 0, toma los tramos positivos y añade las raíces.','Nos quedamos con los dos tramos exteriores. Dos y tres también entran porque el producto vale cero.'),
+step('Estudiar un coeficiente principal negativo','−x² − 7x − 10 < 0 → (x + 5)(x + 2) > 0 → (−∞, −5) ∪ (−2, +∞)','Multiplica ambos lados por −1 e invierte la desigualdad. Las raíces son −5 y −2. Prueba −6, −3 y 0: los productos son 4, −2 y 10.','Al multiplicar por menos uno buscamos un producto positivo. Antes de menos cinco y después de menos dos lo conseguimos. Las raíces quedan fuera porque la condición es estricta.'),
+step('Elegir el tramo central','x² − 3x + 2 ≤ 0 → (x − 1)(x − 2) ≤ 0 → [1, 2]','Las raíces son 1 y 2. Prueba 0, 1,5 y 3: salen 2, −0,25 y 2. Elige el tramo negativo y añade los ceros.','Entre uno y dos los factores tienen signos opuestos. En los extremos el producto vale cero. Como se permite la igualdad, incluimos uno y dos.')
+]]
+];
+lessons.push(
+['Raíces y casos especiales','Pág. 75 · Ejercicios 8a, 8d y 8g de la pág. 78','Primero calcula el discriminante. Luego usa las raíces para dividir la recta, comprueba el signo en cada tramo y elige los valores que cumplen la inecuación.',[
+step('Qué nos dice el discriminante','Δ = b² − 4ac','En ax² + bx + c, a multiplica a x², b multiplica a x y c es el número sin x. El discriminante va dentro de la raíz de la fórmula. Si es positivo hay dos raíces. Si es cero hay una raíz doble. Si es negativo no hay raíces reales.','Identifica los tres coeficientes con su signo. El discriminante es be al cuadrado menos cuatro por a por ce. Nos indica cuántos puntos marcar antes de hacer la tabla de signos.'),
+step('Sustituir los coeficientes','x² − 5x + 6 ≥ 0 · Δ = (−5)² − 4·1·6 = 25 − 24 = 1','Aquí a = 1, b = −5 y c = 6. El cuadrado de −5 da 25. El producto 4 por 1 por 6 da 24. Al restar, queda 1, que es positivo.','Tenemos dos raíces porque el discriminante es uno. Recuerda que menos cinco entre paréntesis, elevado al cuadrado, da veinticinco.'),
+step('Calcular y ordenar las dos raíces','x = (5 ± √1) / 2 · (5 − 1)/2 = 2 · (5 + 1)/2 = 3','El numerador empieza con −b, que aquí es 5. El denominador es 2a = 2. Marca 2 y 3. En ambos puntos el polinomio vale cero.','Haz primero la cuenta con menos y después con más. Salen dos y tres. Esos puntos dividen la recta en tres tramos.'),
+step('Probar un valor por tramo','x² − 5x + 6 = (x − 2)(x − 3)','Con x = 0, el producto es 6. Con x = 2,5, es −0,25. Con x = 4, es 2. Dentro de cada tramo el signo se mantiene porque no hay más raíces.','En el primer tramo los dos factores son negativos. En el centro tienen signos opuestos. En el último los dos son positivos.',`<table><caption>8a · Tabla de signos</caption><thead><tr><th scope="col">Tramo o punto</th><th scope="col">(−∞, 2)</th><th scope="col">2</th><th scope="col">(2, 3)</th><th scope="col">3</th><th scope="col">(3, +∞)</th></tr></thead><tbody><tr><th scope="row">Signo</th><td>+</td><td>0</td><td>−</td><td>0</td><td>+</td></tr></tbody></table>`),
+step('Dibujar los dos tramos que sirven','(−∞, 2] ∪ [3, +∞)','El signo ≥ acepta resultados positivos y cero. Pinta los dos tramos exteriores y rellena los puntos 2 y 3. El tramo central queda sin pintar.','Se incluyen los dos tramos exteriores y sus extremos. Dos y tres entran porque en ellos el resultado es cero.',twoEnds('Dos puntos rellenos en 2 y 3. Tramo hacia la izquierda desde 2 y hacia la derecha desde 3.',2,3,'M140 24H15l10-6 M15 24l10 6 M260 24H385l-10-6 M385 24l-10 6')),
+step('Calcular el discriminante de una raíz doble','x² + 2x + 1 ≤ 0 · Δ = 2² − 4·1·1 = 4 − 4 = 0','Aquí a = 1, b = 2 y c = 1. Con Δ = 0, sumar o restar la raíz de cero da lo mismo. La fórmula da x = −2/2 = −1.','El discriminante vale cero. La fórmula solo da un valor, menos uno. Marcamos ese punto para separar la recta en dos tramos.'),
+step('Comprobar que el signo no cambia al cruzar la raíz','x² + 2x + 1 = (x + 1)²','Si x = −2, queda (−1)² = 1. Si x = 0, queda 1² = 1. En x = −1, queda 0² = 0. A ambos lados el cuadrado es positivo.','Prueba menos dos y cero, uno a cada lado de menos uno. En ambos casos el cuadrado vale uno. Solo en menos uno vale cero.',`<table><caption>8d · Tabla de signos</caption><thead><tr><th scope="col">Tramo o punto</th><th scope="col">(−∞, −1)</th><th scope="col">−1</th><th scope="col">(−1, +∞)</th></tr></thead><tbody><tr><th scope="row">Signo</th><td>+</td><td>0</td><td>+</td></tr></tbody></table>`),
+step('Dibujar un único punto','{−1}','El signo ≤ acepta resultados negativos o cero. No hay ningún tramo negativo. Solo sirve −1, así que se dibuja un punto relleno y no se pinta ningún tramo.','La única solución es menos uno. Marca un punto relleno sin sombrear a ninguno de sus lados.',`<svg class="line" viewBox="0 0 400 66" role="img" aria-label="Recta con un único punto relleno en menos uno"><path d="M12 24H388" stroke="#694b45" stroke-width="2"/><circle cx="200" cy="24" r="7" fill="#733e48"/><text x="200" y="54" text-anchor="middle">−1</text></svg>`),
+step('Calcular un discriminante negativo','x² − 2x + 3 ≤ 0 · Δ = (−2)² − 4·1·3 = 4 − 12 = −8','Aquí a = 1, b = −2 y c = 3. El discriminante es negativo. No hay raíces reales, así que no hay puntos que dividan la recta.','El discriminante es menos ocho. Como no hay raíz cuadrada real de un número negativo, no hay puntos de corte con el cero.'),
+step('Estudiar toda la recta como un solo tramo','x² − 2x + 3 = (x − 1)² + 2','Si x = 0, el polinomio vale 3. Como es continuo y no tiene raíces, conserva el signo positivo. También se ve al escribirlo como un cuadrado más 2.','Sin raíces solo tenemos un tramo. Con equis igual a cero sale tres. Además, un cuadrado más dos siempre es positivo.',`<table><caption>8g · Tabla de signos</caption><thead><tr><th scope="col">Tramo</th><th scope="col">(−∞, +∞)</th></tr></thead><tbody><tr><th scope="row">Signo</th><td>+</td></tr></tbody></table>`),
+step('Dejar la recta sin sombrear','∅','Pedimos un resultado menor o igual que cero. El polinomio siempre es positivo, así que ningún valor cumple. El símbolo ∅ significa conjunto vacío.','En este ejercicio ningún valor sirve. La recta queda sin puntos ni tramos resaltados.',`<svg class="line" viewBox="0 0 400 66" role="img" aria-label="Recta numérica sin puntos ni tramos resaltados"><path d="M12 24H388 M12 24l8-5 M12 24l8 5 M388 24l-8-5 M388 24l-8 5" stroke="#694b45" fill="none" stroke-width="2"/><text x="200" y="54" text-anchor="middle">Ningún valor cumple</text></svg>`)
+]],
+['Práctica · Lenguaje y recta','Pág. 78 · Ejercicios 1c, 2c y 3a','Ten a mano papel y lápiz. Primero, expresa «compra como máximo cinco botellas». Después, dibuja el intervalo (5, 9]. Por último, encuentra la parte común de [1, 7] y [−5, 2]. Intenta resolver cada ejercicio antes de revelar su solución.',[
+step('1c · Como máximo cinco botellas','0 ≤ x ≤ 5, con x entero','Si x cuenta botellas, «como máximo cinco» significa x ≤ 5. Como contamos botellas enteras, los valores posibles son 0, 1, 2, 3, 4 y 5.','Primer ejercicio. Si puedes comprar como máximo cinco botellas, ¿puedes comprar exactamente cinco? Sí. Equis es menor o igual que cinco. Como cuenta botellas, solo puede ser un número entero entre cero y cinco.'),
+step('2c · Dibuja el intervalo (5, 9]','5 < x ≤ 9','Marcamos un círculo vacío en el 5 y uno relleno en el 9. Sombreamos el tramo que los une.','Segundo ejercicio. Representa el intervalo que empieza en cinco abierto y acaba en nueve cerrado. Pintamos entre cinco y nueve. El cinco queda fuera y el nueve entra.',twoEnds('Tramo entre cinco abierto y nueve cerrado',5,9,'M140 24H260',false,true)),
+step('3a · Encuentra lo que comparten [1, 7] y [−5, 2]','[1, 7] ∩ [−5, 2] = [1, 2]','La intersección contiene los números que están en ambos intervalos. El tramo común empieza en 1 y acaba en 2, ambos incluidos.','Tercer ejercicio. Piensa en dos horarios que tienen que coincidir. Solo nos quedamos con la parte que comparten. En este caso, del uno al dos, incluyendo los dos extremos.',twoEnds('Tramo de uno a dos, extremos incluidos',1,2,'M140 24H260'))
+]],
+['Práctica · Primer grado','Pág. 78 · Ejercicio 4d','Resuelve la inecuación de arriba. ¿Qué pasa con el símbolo si dejas un coeficiente negativo junto a la equis?',[
+step('Abrir paréntesis y simplificar','4x − 6 + 5 > 7x − 21 − 11 → 4x − 1 > 7x − 32','Multiplicamos cada término dentro de cada paréntesis. Después agrupamos los números sin equis.','Dos por dos equis da cuatro equis. Dos por menos tres da menos seis. A la derecha, siete por equis da siete equis y siete por menos tres da menos veintiuno. Al simplificar queda cuatro equis menos uno mayor que siete equis menos treinta y dos.'),
+step('Reunir términos con x','4x − 1 > 7x − 32 → −3x − 1 > −32 → −3x > −31','Restamos 7x en ambos lados y luego sumamos 1.','Quitamos siete equis de ambos lados y luego sumamos uno a ambos lados. Nos queda menos tres por equis mayor que menos treinta y uno.'),
+step('Dividir e indicar el intervalo','−3x > −31 → (−3x) ÷ (−3) < (−31) ÷ (−3) → x < 31/3 → (−∞, 31/3)','Dividimos entre −3 e invertimos > a <. El punto 31/3 queda fuera.','Dividimos por menos tres. Mayor que se convierte en menor que. La solución son los números menores que treinta y un tercios.',line('Círculo abierto en treinta y un tercios y flecha hacia la izquierda','31/3',false,false))
+]],
+['Práctica · Segundo grado','Pág. 78 · Ejercicios 8a, 8d y 8g','Para resolver la primera inecuación, busca dos números que al multiplicarse den 6 y al sumarse den −5. Después prueba con x² + 2x + 1 ≤ 0. Para terminar, resuelve x² − 2x + 3 ≤ 0.',[
+step('8a · Factorizar y marcar los ceros','(x − 2)(x − 3) ≥ 0 · Raíces: 2 y 3','−2 y −3 suman −5 y se multiplican para dar 6. Los factores se anulan en 2 y 3.','Factorizamos como equis menos dos por equis menos tres. Los ceros están en dos y tres.'),
+step('8a · Probar un número de cada tramo','x = 0 → +6 · x = 2,5 → −0,25 · x = 4 → +2','El signo es positivo antes de 2, negativo entre 2 y 3 y positivo después de 3. En 2 y 3 vale cero.','Con cero, el producto es positivo. Con dos coma cinco, es negativo. Con cuatro, vuelve a ser positivo. En dos y en tres vale cero.'),
+step('8a · Unir las dos semirrectas','(−∞, 2] ∪ [3, +∞)','Elegimos los dos tramos positivos e incluimos los ceros. El símbolo ∪ indica unión.','Nos quedamos con los valores menores o iguales que dos, o mayores o iguales que tres. Ambos extremos se incluyen.',twoEnds('Flecha a la izquierda desde dos y a la derecha desde tres, ambos incluidos',2,3,'M140 24H19l10-6 M19 24l10 6 M260 24H381l-10-6 M381 24l-10 6')),
+step('8d · ¿Y si hay una raíz doble?','x² + 2x + 1 ≤ 0 → (x + 1)² ≤ 0 → {−1}','El cuadrado solo cumple cuando vale cero. En la recta dibujarías un único punto relleno en −1.','Un cuadrado nunca es negativo. Como el ejercicio pide menor o igual que cero, solo sirve la raíz, menos uno.'),
+step('8g · ¿Y si no hay raíces reales?','x² − 2x + 3 ≤ 0 → (x − 1)² + 2 ≤ 0 → ∅','El cuadrado es como mínimo cero. Al sumar 2 el resultado es siempre positivo. El conjunto vacío se representa sin sombrear ningún punto.','Un cuadrado más dos vale al menos dos. No puede ser menor o igual que cero. El conjunto de soluciones está vacío.')
+]]
+);
+document.getElementById('credits').textContent = 'Fuente didáctica · Tema_6_Inecuaciones.pdf, págs. 72–75 y 78. Enunciados seleccionados del tema, con explicaciones adaptadas.';
+const exampleGroups = [
+ [[0,'Ejemplo breve · A partir del 4a'],[1,'Ejemplo breve · A partir del 4b'],[2,'Ejemplo breve · A partir del 4c'],[3,'Ejercicio completo 4a'],[6,'Ejercicio completo 4b'],[7,'Ejercicio completo 4c']],
+ [[0,'Ejercicio 4d'],[2,'Ejercicio 4g']],
+ [[0,'Ejercicio 2a'],[1,'Ejercicio 2b'],[2,'Ejercicio 2c'],[3,'Ejercicio 2h']],
+ [[0,'Ejercicio 8a'],[3,'Ejercicio 8c'],[4,'Ejercicio 8h']],
+ [[1,'Ejercicio 8a · Dos raíces'],[5,'Ejercicio 8d · Una raíz doble'],[8,'Ejercicio 8g · Sin raíces reales']]
+];
+const selfPractice = [
+ ['Ejercicio 2e · Recta e intervalos', '[3, 8)', ['Rellena el punto en 3.', 'Deja abierto el punto en 8.', 'Pinta entre los extremos.']],
+ ['Ejercicio 3b · Intersección', '[2, 10] ∩ [3, 8]', ['Todos los puntos de [3, 8] están también en [2, 10].', 'La parte común es [3, 8].']],
+ ['Ejercicio 4h · Primer grado', 'x(2x + 1) − x(x − 5) − x(x + 6) > 7', ['Desarrolla los productos: 2x² + x − x² + 5x − x² − 6x > 7.', 'Se cancelan todos los términos con x. Queda 0 > 7.', 'La condición es falsa para todo x. Solución: ∅.']],
+ ['Ejercicio 8b · Raíz doble', 'x² + 2x + 1 ≥ 0', ['Factoriza: (x + 1)² ≥ 0.', 'Un cuadrado nunca es negativo.', 'Sirven todos los números reales.']],
+ ['Ejercicio 8e · Sin raíces reales', 'x² + 2x + 3 ≥ 0', ['Completa el cuadrado: (x + 1)² + 2 ≥ 0.', 'La expresión siempre vale al menos 2.', 'Sirven todos los números reales.']],
+ ['Ejercicio 8f · Segundo grado', '−x² − 6x + 7 > 0', ['Multiplica por −1 e invierte: x² + 6x − 7 < 0.', 'Factoriza: (x + 7)(x − 1) < 0. Las raíces son −7 y 1.', 'Los factores tienen signos opuestos entre las raíces. Solución: (−7, 1).']],
+  ['Ejercicio 4e · Quitar denominadores', '(2x − 1)/3 − (5x + 4)/2 ≤ (x − 1)/6 + (x + 2)/4', [
+    'El mínimo común múltiplo de 3, 2, 6 y 4 es 12. Multiplica todos los términos por 12. Como 12 es positivo, el signo se conserva.',
+    'Resulta 4(2x − 1) − 6(5x + 4) ≤ 2(x − 1) + 3(x + 2). El signo menos afecta a todo el segundo paréntesis.',
+    'Desarrolla: 8x − 4 − 30x − 24 ≤ 2x − 2 + 3x + 6. Agrupa: −22x − 28 ≤ 5x + 4.',
+    'Resta 5x en ambos lados: −27x − 28 ≤ 4.',
+    'Suma 28 en ambos lados: −27x ≤ 32.',
+    'Divide ambos lados entre −27: (−27x) ÷ (−27) ≥ 32 ÷ (−27). El signo se invierte porque −27 es negativo.',
+    'Simplifica: x ≥ −32/27.',
+    'Intervalo: [−32/27, +∞). En la recta, rellena el extremo y pinta hacia la derecha.'
+  ]],
+  ['Ejercicio 4f · Fracciones en ambos lados', '(x − 1)/7 + (x + 1)/3 − (3x + 5)/2 ≥ (2x − 7)/6 + x', [
+    'Multiplica todos los términos por 42, el mínimo común múltiplo de los denominadores.',
+    'Queda 6(x − 1) + 14(x + 1) − 21(3x + 5) ≥ 7(2x − 7) + 42x.',
+    'Desarrolla y agrupa. A la izquierda: −43x − 97. A la derecha: 56x − 49.',
+    'Resta 56x en ambos lados: −99x − 97 ≥ −49.',
+    'Suma 97 en ambos lados: −99x ≥ 48.',
+    'Divide ambos lados entre −99: (−99x) ÷ (−99) ≤ 48 ÷ (−99). Como el divisor es negativo, el signo se invierte.',
+    'Simplifica: x ≤ −48/99. Al dividir numerador y denominador entre 3, queda x ≤ −16/33.',
+    'Intervalo: (−∞, −16/33]. Marca un punto relleno y pinta a la izquierda.'
+  ]],
+  ['Ejercicio 5a · Intersección de dos soluciones', 'x + 5 ≥ 1 − x  y  2x + 3 ≤ 0', [
+    'Primera inecuación. Suma x en ambos lados: 2x + 5 ≥ 1. Resta 5 en ambos lados: 2x ≥ −4.',
+    'Divide ambos lados entre 2: (2x) ÷ 2 ≥ (−4) ÷ 2. El signo se conserva porque 2 es positivo.',
+    'Simplifica la primera condición: x ≥ −2.',
+    'Segunda inecuación. Resta 3 en ambos lados: 2x ≤ −3.',
+    'Divide ambos lados entre 2: (2x) ÷ 2 ≤ (−3) ÷ 2. El signo se conserva porque 2 es positivo.',
+    'Simplifica la segunda condición: x ≤ −3/2.',
+    'Como ambas condiciones deben cumplirse, toma solo el tramo común. Solución: [−2, −3/2]. Los extremos se incluyen.'
+  ]],
+  ['Ejercicio 5b · Un sistema sin solución', '3x + 7 < x − 4  y  −5x + x ≤ 3x + 1', [
+    'Primera inecuación. Resta x en ambos lados: 2x + 7 < −4. Resta 7 en ambos lados: 2x < −11.',
+    'Divide ambos lados entre 2: (2x) ÷ 2 < (−11) ÷ 2. El signo se conserva porque 2 es positivo.',
+    'Simplifica la primera condición: x < −11/2.',
+    'Segunda inecuación. Agrupa a la izquierda: −4x ≤ 3x + 1. Resta 3x en ambos lados: −7x ≤ 1.',
+    'Divide ambos lados entre −7: (−7x) ÷ (−7) ≥ 1 ÷ (−7). Como el divisor es negativo, el signo se invierte.',
+    'Simplifica la segunda condición: x ≥ −1/7.',
+    'Un tramo queda a la izquierda de −11/2 y el otro comienza en −1/7. No se cruzan. Solución: ∅.'
+  ]],
+  ['Ejercicio 6 · Feria del libro', '¿Cuántos libros se necesitan para superar 1880 €?', [
+    'Con el descuento del 10 %, un libro de 20 € queda en 18 €. Con el del 5 %, queda en 19 €.',
+    'Con la proporción prevista por el enunciado, el ingreso medio es 0,20 · 18 + 0,80 · 19 = 18,80 € por libro.',
+    'Si x es el número de libros, plantea 18,80x > 1880.',
+    'Divide ambos lados: (18,80x) ÷ 18,80 > 1880 ÷ 18,80. El ingreso por libro es positivo, así que el signo se conserva.',
+    'Simplifica: x > 100.',
+    '100 libros dan exactamente 1880 €. Para superarlos, la estimación mínima es 101 libros.'
+  ]],
+  ['Ejercicio 7 · Horarios de compra', '¿Quién coincide si cada compra dura 45 minutos?', [
+    'Suma 45 minutos a cada hora de entrada. Para cada pareja, el tramo común empieza a la hora de entrada más tardía y termina a la hora de salida más temprana.',
+    'Martes: Paloma y Salva coinciden de 15:15 a 15:45. Inma y Luis, de 16:30 a 16:45.',
+    'Jueves: Luis y Paloma coinciden de 11:45 a 12:00. Paloma e Inma, de 12:00 a 12:30. Inma y Salva, de 12:30 a 12:45.',
+    'Si cuentas un encuentro justo al entrar o salir, el martes Salva sale cuando Inma entra a las 16:00. El jueves, a las 12:00 sale Luis cuando entra Inma; a las 12:30 sale Paloma cuando entra Salva.'
+  ]],
+  ['Ejercicio 9a · Reducir y completar el cuadrado', 'x(x − 2) + x(x − 1) ≥ x² − x − 8', [
+    'Distribuye: 2x² − 3x ≥ x² − x − 8. Lleva todo a la izquierda: x² − 2x + 8 ≥ 0.',
+    'Completa el cuadrado: x² − 2x + 8 = (x − 1)² + 7.',
+    'El resultado vale al menos 7. Sirve toda la recta real.'
+  ]],
+  ['Ejercicio 9b · Los términos cúbicos se cancelan', 'x²(x − 1) + x(x − 2) ≤ x³ − x(x + 5)', [
+    'Desarrolla. A la izquierda queda x³ − 2x; a la derecha, x³ − x² − 5x.',
+    'Resta x³ y pasa el resto al lado izquierdo: x² + 3x ≤ 0.',
+    'Factoriza: x(x + 3) ≤ 0. Las raíces son −3 y 0. Entre ellas los factores tienen signos opuestos. Incluye las raíces: [−3, 0].'
+  ]],
+  ['Ejercicio 9c · Una sola solución', '−x² + 4 ≤ 3(x² + 2x) − 5x(x + 2)', [
+    'Desarrolla el lado derecho: 3x² + 6x − 5x² − 10x = −2x² − 4x.',
+    'Suma 2x² y 4x en ambos lados: x² + 4x + 4 ≤ 0.',
+    'Factoriza: (x + 2)² ≤ 0. Un cuadrado solo puede cumplir esta condición cuando vale cero. Solución: {−2}.'
+  ]],
+  ['Ejercicio 9d · Una condición que siempre se cumple', '1 + 7x(x + 2) ≥ 2x + 6(x² + 2x)', [
+    'Desarrolla: 1 + 7x² + 14x ≥ 6x² + 14x.',
+    'Resta 6x² y 14x a ambos lados: 1 + x² ≥ 0.',
+    'Como x² ≥ 0, la expresión vale al menos 1. Sirve toda la recta real.'
+  ]]
+];
+lessons.push(
+['El caso del libro · Horarios','Págs. 72–73','La coordinadora compara los horarios del equipo para decidir cuándo empezar una reunión.',[
+step('Elegir la incógnita','x = hora de inicio','Cada intervalo representa las horas en las que una persona puede asistir. Si una persona da dos franjas, basta con que la hora esté en una de ellas.','Equis es la hora de inicio. Cada franja indica cuándo puede acudir una persona. Para saber quién puede asistir, comprueba si la hora está dentro de su franja.'),
+step('Buscar la parte común','[15, 18] ∩ [16, 19] = [16, 18]','En las franjas de tarde del esquema, compara la disponibilidad de la editora 1 y del editor 4. Antes de las 16 no pueden ambos. Después de las 18 tampoco.','Pon los dos horarios uno debajo del otro. Coinciden desde las dieciséis hasta las dieciocho.',twoEnds('Tramo de dieciséis a dieciocho',16,18,'M140 24H260')),
+step('Comprobar a quién le sirve','16:00 · Hora elegida en la pág. 73','El libro elige las 16:00 para maximizar la asistencia e indica que pueden acudir 11 personas. El tramo [16, 18] no significa que todo el equipo pueda asistir: en la página 72 también aparecen disponibilidades que terminan antes.','La hora de las dieciséis es la que el libro elige para reunir a más personas. Para comprobar un horario, cuenta únicamente a quienes tienen esa hora en alguna de sus franjas.')
+]],
+['El caso del libro · Repartos','Págs. 74–75','El libro pregunta cuántos pedidos hay que repartir para ganar al menos 18 € al día.',[
+step('Pasar del enunciado a la inecuación','−0,25p² + 4p + 5 ≥ 18','p es el número de pedidos. Los 5 € fijos se suman al incentivo total. Como hay un máximo de 4 pedidos por hora durante 2 horas, p solo puede ser un entero entre 0 y 8.','A los incentivos les sumamos cinco euros fijos. Buscamos un total de al menos dieciocho euros y recordamos que no se pueden hacer más de ocho pedidos.'),
+step('Dejar cero en un lado','−0,25p² + 4p − 13 ≥ 0 → p² − 16p + 52 ≤ 0','Resta 18. Multiplica por −4 para quitar el decimal. Al multiplicar por un negativo, se invierte la desigualdad.','Resta dieciocho en ambos lados. Luego multiplica por menos cuatro. Así desaparece el decimal y mayor o igual pasa a menor o igual.'),
+step('Calcular los límites','p² − 16p + 52 = 0 → p = 8 ± 2√3','El discriminante es 256 − 208 = 48. Las raíces son aproximadamente 4,54 y 11,46. La expresión es negativa entre las raíces y vale cero en ellas.','Las raíces son aproximadamente cuatro coma cincuenta y cuatro y once coma cuarenta y seis. Para comprobar el tramo central, prueba ocho. El polinomio vale menos doce, así que ese tramo sirve.'),
+step('Volver a los pedidos posibles','p ∈ {5, 6, 7, 8}','Toma solo los enteros del tramo solución que no superan 8. Con 4 pedidos se ganan 17 €. Con 5 se ganan 18,75 €. Con 8 se ganan 21 €, el máximo diario dentro del límite.','Cuatro pedidos se quedan cortos. Cinco ya superan dieciocho euros. También sirven seis, siete y ocho. Ocho da el máximo de veintiún euros dentro del límite.')
+]]
+);
+lessons.push(['Practica por tu cuenta','Pág. 78 · Selección de ejercicios','Resuelve cada ejercicio en papel. Cuando termines, abre su solución para comparar los pasos.',[]]);
+const prompts = {
+ 'Dividir por un negativo': ['2(2x − 3) + 5 > 7(x − 3) − 11', 'Empezamos con el ejercicio cuatro de.'],
+ 'Segundo grado': ['x² − 5x + 6 ≥ 0', 'Empezamos con el ejercicio ocho a.'],
+ 'Práctica · Primer grado': ['2(2x − 3) + 5 > 7(x − 3) − 11', 'Vamos a resolver el ejercicio cuatro de.'],
+ 'Práctica · Segundo grado': ['x² − 5x + 6 ≥ 0', 'Vamos a resolver el ejercicio ocho a.']
+};
+const rowReasons = {
+ '(8x) ÷ 8 ≥ 23 ÷ 8':'Escribe la división en ambos lados: ocho x entre ocho y veintitrés entre ocho. Como ocho es positivo, la desigualdad conserva su sentido.',
+ 'x ≥ 23/8':'A la izquierda, ocho entre ocho da uno, así que queda x sola. A la derecha, veintitrés entre ocho queda escrito como fracción.',
+ '9x + 6 < 1':'Suma cinco x en ambos lados. A la derecha se cancela menos cinco x y a la izquierda cuatro x más cinco x da nueve x.',
+ '9x < −5':'Resta seis en ambos lados para quitar el más seis. A la derecha, uno menos seis da menos cinco.',
+ '(9x) ÷ 9 < (−5) ÷ 9':'Dividimos ambos lados entre nueve. El divisor es positivo y la desigualdad se mantiene.',
+ 'x < −5/9':'A la izquierda, nueve entre nueve da uno y queda x. A la derecha queda menos cinco novenos.',
+ '(9x) ÷ 9 ≤ (−11) ÷ 9':'Dividimos ambos lados entre nueve. El divisor es positivo, así que se conserva el símbolo.',
+ 'x ≤ −11/9':'A la izquierda queda x. A la derecha queda menos once novenos. El límite entra porque se admite la igualdad.',
+ '9x − 2 ≥ x + 21':'Agrupa los números de la izquierda. Nueve menos once da menos dos. El lado derecho sigue igual.',
+ '8x − 2 ≥ 21':'Resta x en ambos lados. Quedan ocho x a la izquierda y se cancela la x de la derecha.',
+ '8x ≥ 23':'Suma dos en ambos lados. Se cancela el menos dos de la izquierda y veintiuno más dos da veintitrés.',
+ '[23/8, +∞)':'Incluye veintitrés octavos y todos los valores mayores. Usa un corchete en el límite porque la igualdad está permitida.',
+ '4x + 6 < 1 − 5x':'Agrupa por separado los términos de la izquierda. Siete x menos tres x da cuatro x. Menos cinco más once da seis. La derecha sigue igual.',
+ '7x + 1 ≤ −2x − 10':'Distribuye menos cinco en el paréntesis. Tres x menos cinco x da menos dos x, y menos cinco por dos da menos diez.',
+ '9x + 1 ≤ −10':'Suma dos x en ambos lados. Se cancela la x de la derecha y quedan nueve x a la izquierda.',
+ '9x ≤ −11':'Resta uno en ambos lados. A la derecha, menos diez menos uno da menos once.',
+ '4x − 1 > 7x − 32':'Tras distribuir en los paréntesis, agrupa las constantes. A la izquierda, menos seis más cinco da menos uno. A la derecha, menos veintiuno menos once da menos treinta y dos.',
+ '−3x − 1 > −32':'Resta siete x en ambos lados. Cuatro x menos siete x da menos tres x y se cancela la x de la derecha.',
+ '−3x > −31':'Suma uno en ambos lados para quitar el menos uno. A la derecha, menos treinta y dos más uno da menos treinta y uno.',
+ '(−3x) ÷ (−3) < (−31) ÷ (−3)':'Dividimos ambos lados entre menos tres. Como el divisor es negativo, mayor que cambia a menor que.',
+ 'x < 31/3':'A la izquierda, menos tres entre menos tres da uno y queda x. A la derecha, el cociente de dos negativos da treinta y un tercios.',
+ 'x² − x + 3 ≤ x² + 5':'Distribuye x. Al multiplicar por x sale x al cuadrado y al multiplicar por menos uno sale menos x.',
+ '−x ≤ 2':'Resta x al cuadrado en ambos lados y se cancela. Luego resta tres en ambos lados para dejar menos x sola.',
+ '(−x) ÷ (−1) ≥ 2 ÷ (−1)':'Dividimos ambos lados entre menos uno. Como el divisor es negativo, menor o igual cambia a mayor o igual.',
+ 'x ≥ −2':'A la izquierda queda x. A la derecha, dos dividido entre menos uno da menos dos.',
+ '9x < −5::4x + 6 < 1 − 5x':'Suma cinco x en ambos lados para reunir las x. Luego resta seis en ambos lados. Quedan nueve x a la izquierda y menos cinco a la derecha.',
+ '(x − 2)(x − 3) ≥ 0':'Factoriza con menos dos y menos tres: su suma es menos cinco y su producto es seis.',
+ '(x + 5)(x + 2) > 0':'Multiplica ambos lados por menos uno e invierte la desigualdad. Factoriza usando cinco y dos, que suman siete y cuyo producto es diez.',
+ '(−∞, −5) ∪ (−2, +∞)':'Fuera del tramo entre las raíces, los factores tienen el mismo signo y su producto es positivo. Las raíces quedan fuera porque dan cero.',
+ '(x − 1)(x − 2) ≤ 0':'Factoriza con menos uno y menos dos: su suma es menos tres y su producto es dos.',
+ '[1, 2]':'Entre uno y dos, los factores tienen signos opuestos. En los extremos el producto vale cero, así que también se incluyen.',
+ '(x + 1)² ≤ 0':'El trinomio es el cuadrado de x más uno. Al desarrollarlo se recuperan los tres términos del enunciado.',
+ '{−1}':'Un cuadrado nunca es negativo. Solo cumple si vale cero, y x más uno vale cero cuando x es menos uno.',
+ '(x − 1)² + 2 ≤ 0':'Completa el cuadrado: x al cuadrado menos dos x más uno es el cuadrado de x menos uno. De los tres que había, sobran dos.',
+ '∅':'El cuadrado es como mínimo cero y, al sumar dos, la expresión es positiva para todo x. Ningún valor cumple.',
+ '+6':'Sustituye cero en los factores: menos dos por menos tres da seis, positivo.',
+ '−0,25':'Sustituye dos coma cinco. Los factores dan medio y menos medio. Su producto es menos un cuarto.',
+ '+2':'Sustituye cuatro. Los factores dan dos y uno. Su producto es dos, positivo.',
+ 'p² − 16p + 52 ≤ 0':'Multiplica todos los términos por menos cuatro. Se quita el decimal y se invierte la desigualdad.',
+ 'p = 8 ± 2√3':'Aplica la fórmula cuadrática. El discriminante es cuarenta y ocho y, al simplificar, las raíces son ocho más o menos dos veces la raíz de tres.'
+};
+
+const byId = id => document.getElementById(id);
+const menu = byId('menu'), title = byId('title'), steps = byId('steps');
+let current = 0, shown = 0;
+const synth = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window ? window.speechSynthesis : null;
+const voiceSelect = byId('voices'), rate = byId('rate');
+const playback = byId('playback'), pauseButton = byId('pause');
+let voices = [], active = null, paused = false, chosenVoice = '', activeSpeaker = null;
+voiceSelect.onchange = () => { chosenVoice = voiceSelect.value; };
+function audioState(message) {
+  byId('voiceState').textContent = message;
+  if (!active && playback.contains(document.activeElement)) activeSpeaker?.focus();
+  playback.hidden = !active;
+  pauseButton.textContent = paused ? '▶' : '⏸';
+  pauseButton.setAttribute('aria-label', paused ? 'Reanudar' : 'Pausar');
+  pauseButton.title = paused ? 'Reanudar' : 'Pausar';
+}
+function stop(message='') {
+  active = null;
+  paused = false;
+  if (synth) {
+    synth.cancel();
+    if (synth.paused) synth.resume();
+  }
+  audioState(message);
+}
+function loadVoices() {
+  const safari = /Safari/i.test(navigator.userAgent) && !/Chrome|Chromium|CriOS|Edg|FxiOS/i.test(navigator.userAgent);
+  const priority = voice => {
+    const name = voice.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if (safari && /monica/i.test(name)) return 0;
+    if (!safari && /google/i.test(name)) return /^es-ES$/i.test(voice.lang) ? 0 : 1;
+    return /^es-ES$/i.test(voice.lang) ? 2 : 3;
+  };
+  voices = synth.getVoices().filter(v => /^es(?:[-_]|$)/i.test(v.lang))
+    .sort((a,b) => priority(a) - priority(b) || a.name.localeCompare(b.name));
+  voiceSelect.replaceChildren(...voices.map(v => new Option(v.name + ' · ' + v.lang, v.voiceURI)));
+  if (!voices.length) voiceSelect.add(new Option('Español · voz del sistema', ''));
+  voiceSelect.value = voices.some(v => v.voiceURI === chosenVoice) ? chosenVoice : voices[0]?.voiceURI || '';
+}
+function spokenMath(text) {
+  return text
+    .replace(/√\(([^()]*)\)/g, 'raíz cuadrada de ($1)')
+    .replace(/√(\d+(?:[.,]\d+)?)/g, 'raíz cuadrada de $1')
+    .replace(/√/g, 'raíz cuadrada de ')
+    .replace(/([xyzptabc])([²³⁴])/g, '$1 $2')
+    .replace(/²/g, ' al cuadrado')
+    .replace(/³/g, ' al cubo')
+    .replace(/⁴/g, ' a la cuarta')
+    .replace(/ˣ/g, ' elevado a equis')
+    .replace(/\b(\d+(?:[.,]\d+)?)([xyzpt])\b/g, '$1 por $2')
+    .replace(/\bx\b/g, 'equis')
+    .replace(/Δ/g, 'delta')
+    .replace(/±/g, ' más o menos ')
+    .replace(/≤/g, ' menor o igual que ')
+    .replace(/≥/g, ' mayor o igual que ')
+    .replace(/</g, ' menor que ')
+    .replace(/>/g, ' mayor que ')
+    .replace(/=/g, ' igual a ')
+    .replace(/[·×]/g, ' por ')
+    .replace(/[÷/]/g, ' dividido entre ')
+    .replace(/−/g, ' menos ')
+    .replace(/∞/g, 'infinito')
+    .replace(/∅/g, 'conjunto vacío')
+    .replace(/\s+/g, ' ').trim();
+}
+function read(speaker, index, explanation) {
+  if (!synth) return;
+  stop();
+  const [heading,,intro,items] = lessons[current];
+  const prompt = prompts[heading]?.[1] || '';
+  const narration = explanation ?? (index === undefined
+    ? [heading + '.', prompt, intro].filter(Boolean).join(' ')
+    : items[index].speech);
+  const utterance = new SpeechSynthesisUtterance(spokenMath(narration));
+  const voice = voices.find(v => v.voiceURI === voiceSelect.value) || voices[0];
+  if (voice) utterance.voice = voice;
+  utterance.lang = voice?.lang || 'es-ES';
+  utterance.rate = Number(rate.value);
+  utterance.onend = () => {
+    if (active !== utterance) return;
+    active = null;
+    paused = false;
+    audioState('Lectura terminada.');
+  };
+  utterance.onerror = () => {
+    if (active !== utterance) return;
+    active = null;
+    paused = false;
+    audioState('El navegador no pudo reproducir la explicación. Prueba otra voz o abre la explicación escrita.');
+  };
+  active = utterance;
+  activeSpeaker = speaker;
+  speaker.after(playback);
+  audioState('Explicación en voz alta…');
+  synth.speak(utterance);
+}
+function isPractice(index) {
+  return lessons[index][0].startsWith('Práctica ·');
+}
+function update() {
+  const practice = isPractice(current);
+  const total = lessons[current][3].length;
+  [...steps.children].forEach((section,i) => { section.hidden = total > 0 && i >= shown; });
+  byId('progress').hidden = total === 0;
+  byId('progress').textContent = shown + ' de ' + total + ' pasos · Sección ' + (current+1) + ' de ' + lessons.length;
+  byId('hide').hidden = !practice || total === 0;
+  byId('hide').disabled = shown === 0;
+  byId('prev').disabled = current === 0;
+  byId('next').disabled = shown === total && current === lessons.length-1;
+  byId('next').textContent = shown < total ? 'Revelar paso' : current < lessons.length-1 ? 'Siguiente sección' : 'Presentación completada';
+  byId('next').hidden = total === 0;
+}
+function intervalState(sign, limit) {
+  const right = sign === '>' || sign === '≥';
+  const closed = sign === '≥' || sign === '≤';
+  const end = String(limit).replace('-', '−').replace('.', ',');
+  const interval = right ? (closed ? '[' : '(') + end + '; +∞)' : '(−∞; ' + end + (closed ? ']' : ')');
+  return {right, closed, end, interval};
+}
+function updateInterval() {
+  const sign = byId('intervalSign').value;
+  const limit = Number(byId('intervalLimit').value);
+  const {right,closed,end,interval} = intervalState(sign,limit);
+  const position = value => 220 + 31 * value;
+  const x = position(limit);
+  const direction = right ? 'derecha' : 'izquierda';
+  const inclusion = closed ? 'El punto está relleno porque el límite sí cumple.' : 'El punto está vacío porque el límite queda fuera.';
+  byId('intervalLimitValue').textContent = end;
+  byId('intervalResult').textContent = 'x ' + sign + ' ' + end + ' → ' + interval;
+  byId('intervalExplanation').textContent = 'El tramo va hacia la ' + direction + '. ' + inclusion;
+  const drawing = byId('intervalDrawing');
+  drawing.setAttribute('aria-label', 'Recta numérica. Límite ' + end + '. Tramo hacia la ' + direction + '. ' + inclusion);
+  const ticks = Array.from({length:13},(_,index)=>{
+    const value=index-6;
+    const px=position(value);
+    return `<path d="M${px} 32v8"/><text x="${px}" y="59">${String(value).replace('-','−')}</text>`;
+  }).join('');
+  drawing.innerHTML = `<path d="M12 36H428 M12 36l8-5 M12 36l8 5 M428 36l-8-5 M428 36l-8 5" fill="none" stroke="#694b45" stroke-width="2"/><g fill="#402a24" stroke="#694b45" stroke-width=".5" text-anchor="middle" font-size="13">${ticks}</g><path d="${right ? `M${x} 36H425l-10-6 M425 36l-10 6` : `M${x} 36H15l10-6 M15 36l10 6`}" fill="none" stroke="#733e48" stroke-width="5"/><circle cx="${x}" cy="36" r="7" fill="${closed ? '#733e48' : '#fcf1ec'}" stroke="#733e48" stroke-width="3"/>`;
+}
+byId('intervalSign').addEventListener('change',updateInterval);
+byId('intervalLimit').addEventListener('input',updateInterval);
+function openLesson(index, focus=true) {
+  if (synth) stop();
+  current = index;
+  const [heading,source,intro,items] = lessons[index];
+  const practice = isPractice(index);
+  shown = practice ? 0 : items.length;
+  title.textContent = heading;
+  byId('intervalExplorer').hidden = heading !== 'Recta e intervalos';
+  if (!byId('intervalExplorer').hidden) updateInterval();
+  const prompt = byId('prompt');
+  prompt.textContent = prompts[heading]?.[0] || '';
+  prompt.hidden = !prompts[heading];
+  byId('source').textContent = source;
+  byId('intro').textContent = intro;
+  const groups = exampleGroups[index] || [];
+  const explainButton = label => `<button class="speaker" type="button" data-explain aria-label="${label}" title="${label}"${synth ? '' : ' disabled'}>🔊</button>`;
+  const escapeText = value => value.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  steps.innerHTML = items.map((s,i) => {
+    const groupIndex = groups.findIndex(([start]) => start === i);
+    const label = groupIndex < 0 ? '' : `<div class="example-label">Ejemplo ${groupIndex+1} · ${groups[groupIndex][1]}</div>`;
+    const rows = s.math.split(/ · /).flatMap(part => {
+      const [initial,...results] = part.split(' → ');
+      return [`<p class="formula">${escapeText(initial)}</p>`, ...results.map((result,j) => {
+        const previous = j === 0 ? initial : results[j-1];
+        const reason = rowReasons[result + '::' + previous] || rowReasons[result] || s.reason;
+        return `<div class="row-explanation"><div class="operation"><p class="formula">→ ${escapeText(result)}</p>${explainButton('Escuchar esta operación')}</div><p class="row-reason">${escapeText(reason)}</p></div>`;
+      })];
+    }).join('');
+    const reasons = s.reason.split(/(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÑ¿¡])/u)
+      .map(reason => `<li>${escapeText(reason)}</li>`).join('');
+    return `<section class="step${label ? ' example-start' : ''}" hidden>${label}<h3 tabindex="-1">${i+1}. ${s.title}</h3><div class="operation"><div class="resolution">${rows}</div><button class="speaker" type="button" data-step="${i}" aria-label="Escuchar la explicación del paso ${i+1}" title="Escuchar este paso"${synth ? '' : ' disabled'}>🔊</button></div>${s.extra}<div class="why"><strong>Por qué</strong><ul>${reasons}</ul></div></section>`;
+  }).join('');
+  if (items.length === 0) {
+    steps.innerHTML = selfPractice.map(([name,problem,solution],i) => `<article class="step example-start"><h3>${i+1}. ${name}</h3><p class="formula">${escapeText(problem)}</p><details><summary>Ver solución</summary><ol>${solution.map(row => `<li class="row-explanation"><div class="operation"><p class="row-reason">${escapeText(row)}</p>${explainButton('Escuchar este paso de la solución')}</div></li>`).join('')}</ol></details></article>`).join('');
+  }
+  menuButtons.forEach((button,i) => {
+    if (i === current) button.setAttribute('aria-current','step');
+    else button.removeAttribute('aria-current');
+  });
+  update();
+  if (focus) title.focus();
+}
+const menuButtons = lessons.map(([heading],i) => {
+  const button = document.createElement('button');
+  button.textContent = (i+1) + '. ' + heading;
+  button.onclick = () => openLesson(i);
+  const group = isPractice(i) || heading === 'Practica por tu cuenta' ? 'practiceLinks' : 'explanationLinks';
+  byId(group).append(button);
+  return button;
+});
+byId('prev').onclick = () => openLesson(current-1);
+byId('hide').onclick = () => {
+  if (active) stop('Lectura detenida.');
+  shown--;
+  update();
+  if (shown === 0) byId('next').focus();
+};
+byId('next').onclick = () => {
+  if (shown === lessons[current][3].length) { openLesson(current+1); return; }
+  shown++;
+  update();
+  steps.children[shown-1].querySelector('h3').focus();
+};
+steps.addEventListener('click', event => {
+  const explanationButton = event.target.closest('button[data-explain]');
+  if (explanationButton) {
+    const reason = explanationButton.closest('.row-explanation').querySelector('.row-reason').textContent;
+    read(explanationButton, undefined, reason);
+    return;
+  }
+  const button = event.target.closest('button[data-step]');
+  if (button) read(button, Number(button.dataset.step));
+});
+byId('introSpeaker').onclick = event => read(event.currentTarget);
+byId('stop').onclick = () => stop('Lectura detenida.');
+byId('pause').onclick = () => {
+  paused = !paused;
+  if (paused) synth.pause();
+  else synth.resume();
+  audioState(paused ? 'Lectura en pausa.' : 'Leyendo en voz alta…');
+};
+if (synth) {
+  loadVoices();
+  synth.addEventListener('voiceschanged', loadVoices);
+  window.addEventListener('pagehide', () => stop());
+} else {
+  for (const id of ['voices','rate','introSpeaker']) byId(id).disabled = true;
+  audioState('La lectura en voz alta no está disponible en este navegador. Puedes leer el guion en pantalla.');
+}
+openLesson(0,false);
+</script>
+</html>
